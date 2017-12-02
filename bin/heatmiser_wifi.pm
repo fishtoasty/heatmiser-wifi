@@ -329,7 +329,7 @@ sub lookup_comfort
 
     # Default to the time in the status unless explicitly specified
     $datetime = $status->{time} unless $datetime;
-    die "Badly formatted time '$datetime'\n" unless $datetime =~ / (\d\d:\d\d:\d\d)$/;
+    die "Badly formatted time '$datetime'\n" unless $datetime =~ '/ (\d\d:\d\d:\d\d)$/';
     sub minutes { my ($hour, $minute) = split /:/, shift; return $hour * 60 + $minute; }
     my $time = minutes($1);
 
@@ -378,7 +378,7 @@ sub lookup_timer
 
     # Default to the time in the status unless explicitly specified
     $datetime = $status->{time} unless $datetime;
-    die "Badly formatted time '$datetime'\n" unless $datetime =~ / (\d\d:\d\d:\d\d)$/;
+    die "Badly formatted time '$datetime'\n" unless $datetime =~ '/ (\d\d:\d\d:\d\d)$/';
     my $time = $1;
 
     # Search the timers for the current day for the specified time
@@ -808,6 +808,40 @@ sub dateindex
     return $mode eq '5/2' ? ($index < 5 ? 0 : 1) : $index;
 }
 
+sub get_status
+{
+    my ($self) = @_;
+
+    my @pre_dcb = $self->read_dcb();
+    my $status = $self->dcb_to_status(@pre_dcb);
+
+    return $status;
+}
+
+sub set_status
+{
+    my ($self, $status, $items_hash) = @_;
+
+     my @items = $self->status_to_dcb($status, %$items_hash);
+     my @post_dcb = $self->write_dcb(@items);
+     my $new_status = $self->dcb_to_status(@post_dcb);
+
+     return $new_status;
+}
+
+sub set_away
+{
+    my ($self,$on) = @_;
+
+    my $status = $self->get_status();
+
+    my $runmode = $on == 1 ? 'frost' : 'heating';
+    my $item = {};
+
+    $item->{'runmode'} = $runmode;
+
+    return $self->set_status($status, $item);
+}
 
 # Module loaded correctly
 1;
