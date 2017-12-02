@@ -48,6 +48,15 @@ our ($opt_h, $opt_p);
 getopts('h:p:');
 heatmiser_config::set(host => [h => $opt_h], pin => [p => $opt_p]);
 
+sub print_help()
+{
+	print "Known commands are:\n";
+	print "\t1. set_away <on/off>\n";
+	print "\t2. set_keylock <on/off>\n";
+	print "\t3. set_temperature <temperature>\n";
+	print "\t4. set_hold <temperature> <hours>\n";
+}
+
 {
 	my $status = '';
 	my $command = $ARGV[0];
@@ -73,7 +82,9 @@ heatmiser_config::set(host => [h => $opt_h], pin => [p => $opt_p]);
 		$status = $heatmiser->set_hold($temperature, $hours);
 	}
 	else{
-		die "Unknown command $ARGV[0]";
+		print "Unknown command \'$command\'\n";
+		print_help();
+		exit;
 	}
 
 	my %status_hash;
