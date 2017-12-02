@@ -55,6 +55,7 @@ sub print_help()
 	print "\t2. set_keylock <on/off>\n";
 	print "\t3. set_temperature <temperature>\n";
 	print "\t4. set_hold <temperature> <hours>\n";
+	print "\t4. get_status\n";
 }
 
 {
@@ -80,6 +81,9 @@ sub print_help()
 		my $temperature = $ARGV[1];
 		my $hours = $ARGV[2];
 		$status = $heatmiser->set_hold($temperature, $hours);
+	}
+	elsif ($command eq "get_status") {
+		$status = $heatmiser->get_status();
 	}
 	else{
 		print "Unknown command \'$command\'\n";
