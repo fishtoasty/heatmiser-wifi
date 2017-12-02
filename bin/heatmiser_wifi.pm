@@ -886,5 +886,38 @@ sub set_temperature
     return $self->set_status($status, $item);
 }
 
+sub safeguard_hours
+{
+    my ($hours) = @_;
+
+    if ($hours < 0.5){
+        $hours = 0.5;
+    }
+    elsif ($hours > 24){
+        $hours = 24;
+    }
+
+    return $hours;
+}
+
+
+sub set_hold
+{
+    my ($self,$temperature,$hours) = @_;
+
+    $temperature = safeguard_temperature($temperature);
+    $hours = safeguard_hours($hours);
+    my $minutes = $hours * 60;
+
+    my $status = $self->get_status();
+    my $item = {};
+
+    $item->{'heating'} = {};
+    $item->{'heating'}->{'target'} = $temperature;
+    $item->{'heating'}->{'hold'} = $minutes;
+
+    return $self->set_status($status, $item);
+}
+
 # Module loaded correctly
 1;
