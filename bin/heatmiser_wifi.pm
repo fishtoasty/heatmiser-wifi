@@ -835,13 +835,28 @@ sub set_away
 
     my $status = $self->get_status();
 
-    my $runmode = $on == 1 ? 'frost' : 'heating';
+    my $runmode = $on ? 'frost' : 'heating';
     my $item = {};
 
     $item->{'runmode'} = $runmode;
 
     return $self->set_status($status, $item);
 }
+
+sub set_keylock
+{
+    my ($self,$on) = @_;
+
+    my $status = $self->get_status();
+
+    my $keylock = $on ? 1 : 0;
+    my $item = {};
+
+    $item->{'keylock'} = $keylock;
+
+    return $self->set_status($status, $item);
+}
+
 
 # Module loaded correctly
 1;
