@@ -835,7 +835,7 @@ sub set_away
 
     my $status = $self->get_status();
 
-    my $runmode = $on ? 'frost' : 'heating';
+    my $runmode = $on eq 'on' ? 'frost' : 'heating';
     my $item = {};
 
     $item->{'runmode'} = $runmode;
@@ -849,7 +849,7 @@ sub set_keylock
 
     my $status = $self->get_status();
 
-    my $keylock = $on ? 1 : 0;
+    my $keylock = $on eq 'on' ? 1 : 0;
     my $item = {};
 
     $item->{'keylock'} = $keylock;
