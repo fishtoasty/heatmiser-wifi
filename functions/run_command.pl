@@ -49,10 +49,20 @@ getopts('h:p:');
 heatmiser_config::set(host => [h => $opt_h], pin => [p => $opt_p]);
 
 {
+	my $status = '';
 	my $host = @{heatmiser_config::get_item('host')}[0];
 	# Read the current status of the thermostat
 	my $heatmiser = new heatmiser_wifi(host => $host, heatmiser_config::get(qw(pin)));
-	my $status = $heatmiser->set_away(@ARGV[0]);
+
+	if ($ARGV[0] eq "set_away") {
+		$status = $heatmiser->set_away($ARGV[1]);
+	}
+	elsif ($ARGV[0] eq "set_keylock") {
+		$status = $heatmiser->set_keylock($ARGV[1]);
+	}
+	else{
+		die "Unknown command $ARGV[0]";
+	}
 
 	my %status_hash;
 	$status_hash{$host} = $status;
