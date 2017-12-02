@@ -857,6 +857,34 @@ sub set_keylock
     return $self->set_status($status, $item);
 }
 
+sub safeguard_temperature
+{
+    my ($temperature) = @_;
+
+    if ($temperature > 35){
+        $temperature = 35;
+    }
+    elsif ($temperature < 5){
+        $temperature = 5;
+    }
+
+    return $temperature;
+}
+
+sub set_temperature
+{
+    my ($self,$temperature) = @_;
+
+    $temperature = safeguard_temperature($temperature);
+
+    my $status = $self->get_status();
+    my $item = {};
+
+    $item->{'heating'} = {};
+    $item->{'heating'}->{'target'} = $temperature;
+
+    return $self->set_status($status, $item);
+}
 
 # Module loaded correctly
 1;

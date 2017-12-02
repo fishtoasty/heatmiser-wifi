@@ -60,6 +60,9 @@ heatmiser_config::set(host => [h => $opt_h], pin => [p => $opt_p]);
 	elsif ($ARGV[0] eq "set_keylock") {
 		$status = $heatmiser->set_keylock($ARGV[1]);
 	}
+	elsif ($ARGV[0] eq "set_temperature") {
+		$status = $heatmiser->set_temperature($ARGV[1]);
+	}
 	else{
 		die "Unknown command $ARGV[0]";
 	}
